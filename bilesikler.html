@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bileşiklerin Adlandırılması</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F5F5F5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #question {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #score {
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        #next {
+            display: none;
+            margin-top: 20px;
+        }
+        .correct {
+            background-color: #2196F3; /* Doğru için mavi */
+        }
+        .incorrect {
+            background-color: #FF5722; /* Yanlış için kırmızı */
+        }
+    </style>
+</head>
+<body>
+    <h1>Bileşiklerin Adlandırılması</h1>
+    <div id="question"></div>
+    <div id="options"></div>
+    <div id="score"></div>
+    <button id="next">Sonraki Soru</button>
+
+    <script>
+        const questions = [
+        {
+        "question": "NaCl bileşiğinin adı nedir?",
+        "options": ["Potasyum klorür", "Sodyum oksit", "Magnezyum sülfat", "Sodyum klorür"],
+        "answer": "Sodyum klorür"
+    },
+    {
+        "question": "H2O bileşiğinin yaygın adı nedir?",
+        "options": ["Hidrojen dioksit", "Karbon dioksit", "Oksijen gazı", "Su"],
+        "answer": "Su"
+    },
+    {
+        "question": "CaO bileşiği nedir?",
+        "options": ["Kalsiyum oksit", "Kalsiyum sülfat", "Kalsiyum nitrat", "Kalsiyum karbonat"],
+        "answer": "Kalsiyum oksit"
+    },
+    {
+        "question": "SO2 bileşiği nedir?",
+        "options": ["Kükürt oksit", "Kükürt dioksit", "Kükürt triklorür", "Kükürt sülfat"],
+        "answer": "Kükürt dioksit"
+    },
+    {
+        "question": "K2SO4 bileşiği nedir?",
+        "options": ["Potasyum sülfat", "Potasyum karbonat", "Potasyum klorür", "Potasyum nitrat"],
+        "answer": "Potasyum sülfat"
+    },
+    {
+        "question": "MgCl2 bileşiği nedir?",
+        "options": ["Magnezyum klorür", "Magnezyum sülfat", "Magnezyum nitrat", "Magnezyum oksit"],
+        "answer": "Magnezyum klorür"
+    },
+    {
+        "question": "NH3 bileşiği nedir?",
+        "options": ["Amonyak", "Amonyum klorür", "Azot oksit", "Amonyum nitrat"],
+        "answer": "Amonyak"
+    },
+    {
+        "question": "Al2O3 bileşiği nedir?",
+        "options": ["Alüminyum oksit", "Alüminyum sülfat", "Alüminyum klorür", "Alüminyum karbonat"],
+        "answer": "Alüminyum oksit"
+    },
+    {
+        "question": "Fe2O3 bileşiği nedir?",
+        "options": ["Demir(III) oksit", "Demir(II) sülfat", "Demir(III) sülfat", "Demir oksit"],
+        "answer": "Demir(III) oksit"
+    },
+    {
+        "question": "Na2CO3 bileşiği nedir?",
+        "options": ["Sodyum klorür", "Sodyum karbonat", "Sodyum nitrat", "Sodyum sülfat"],
+        "answer": "Sodyum karbonat"
+    },
+    {
+        "question": "HCl bileşiği nedir?",
+        "options": ["Hidrojen klorür", "Hidrojen sülfat", "Hidrojen oksit", "Hidrojen nitrat"],
+        "answer": "Hidrojen klorür"
+    },
+    {
+        "question": "CuSO4 bileşiği nedir?",
+        "options": ["Bakır(II) sülfat", "Bakır(I) sülfat", "Bakır(II) nitrat", "Bakır oksit"],
+        "answer": "Bakır(II) sülfat"
+    },
+    {
+        "question": "ZnCl2 bileşiği nedir?",
+        "options": ["Çinko klorür", "Çinko oksit", "Çinko sülfat", "Çinko karbonat"],
+        "answer": "Çinko klorür"
+    },
+    {
+        "question": "KNO3 bileşiği nedir?",
+        "options": ["Potasyum nitrat", "Potasyum karbonat", "Potasyum oksit", "Potasyum klorür"],
+        "answer": "Potasyum nitrat"
+    },
+    {
+        "question": "Li2O bileşiği nedir?",
+        "options": ["Lityum oksit", "Lityum nitrat", "Lityum karbonat", "Lityum sülfat"],
+        "answer": "Lityum oksit"
+    },
+    {
+        "question": "CCl4 bileşiği nedir?",
+        "options": ["Karbon dioksit", "Karbon tetklorür", "Karbon sülfür", "Klor gazı"],
+        "answer": "Karbon tetklorür"
+    },
+    {
+        "question": "PbO bileşiği nedir?",
+        "options": ["Kurşun(II) oksit", "Kurşun(IV) oksit", "Kurşun sülfat", "Kurşun karbonat"],
+        "answer": "Kurşun(II) oksit"
+    },
+    {
+        "question": "N2O bileşiği nedir?",
+        "options": ["Azot oksit", "Azot dioksit", "Azot sülfat", "Azot tetraoksit"],
+        "answer": "Azot oksit"
+    },
+    {
+        "question": "H2SO4 bileşiği nedir?",
+        "options": ["Sülfürik asit", "Sülfür dioksit", "Sodyum sülfat", "Sülfür triklorür"],
+        "answer": "Sülfürik asit"
+    },
+    {
+        "question": "NaHCO3 bileşiği nedir?",
+        "options": ["Sodyum karbonat", "Sodyum bikarbonat", "Sodyum klorür", "Sodyum nitrat"],
+        "answer": "Sodyum bikarbonat"
+    },
+    {
+        "question": "Na2S bileşiği nedir?",
+        "options": ["Sodyum sülfür", "Sodyum nitrat", "Sodyum klorür", "Sodyum karbonat"],
+        "answer": "Sodyum sülfür"
+    },
+    {
+        "question": "FeCl3 bileşiği nedir?",
+        "options": ["Demir(III) klorür", "Demir(II) klorür", "Demir sülfat", "Demir oksit"],
+        "answer": "Demir(III) klorür"
+    },
+    {
+        "question": "Cu2O bileşiği nedir?",
+        "options": ["Bakır(I) oksit", "Bakır(II) oksit", "Bakır(I) klorür", "Bakır oksit"],
+        "answer": "Bakır(I) oksit"
+    },
+    {
+        "question": "AgNO3 bileşiği nedir?",
+        "options": ["Gümüş nitrat", "Gümüş sülfat", "Gümüş klorür", "Gümüş oksit"],
+        "answer": "Gümüş nitrat"
+    },
+    {
+        "question": "P2O5 bileşiği nedir?",
+        "options": ["Fosfor pentoksit", "Fosfor dioksit", "Fosfor sülfat", "Fosfor trioksit"],
+        "answer": "Fosfor pentoksit"
+    },
+    {
+        "question": "SiO2 bileşiği nedir?",
+        "options": ["Silisyum dioksit", "Silikon klorür", "Silisyum oksit", "Silisyum karbonat"],
+        "answer": "Silisyum dioksit"
+    },
+    {
+        "question": "AlCl3 bileşiği nedir?",
+        "options": ["Alüminyum klorür", "Alüminyum oksit", "Alüminyum nitrat", "Alüminyum sülfat"],
+        "answer": "Alüminyum klorür"
+    },
+    {
+        "question": "BaCl2 bileşiği nedir?",
+        "options": ["Baryum klorür", "Baryum sülfat", "Baryum nitrat", "Baryum oksit"],
+        "answer": "Baryum klorür"
+    },
+    {
+        "question": "Cr2O3 bileşiği nedir?",
+        "options": ["Krom(III) oksit", "Krom(VI) oksit", "Krom sülfat", "Krom dioksit"],
+        "answer": "Krom(III) oksit"
+    },
+    {
+        "question": "CaCl2 bileşiği nedir?",
+        "options": ["Kalsiyum klorür", "Kalsiyum oksit", "Kalsiyum sülfat", "Kalsiyum karbonat"],
+        "answer": "Kalsiyum klorür"
+    },
+    {
+        "question": "NH4Cl bileşiği nedir?",
+        "options": ["Amonyum klorür", "Amonyak", "Amonyum nitrat", "Amonyum sülfat"],
+        "answer": "Amonyum klorür"
+    },
+    {
+        "question": "C6H12O6 bileşiği nedir?",
+        "options": ["Glukoz", "Fruktoz", "Sukroz", "Galaktoz"],
+        "answer": "Glukoz"
+    },
+    {
+        "question": "C2H5OH bileşiği nedir?",
+        "options": ["Etanol", "Metanol", "Propanol", "Aseton"],
+        "answer": "Etanol"
+    },
+    {
+        "question": "CH4 bileşiği nedir?",
+        "options": ["Metan", "Asetilen", "Etilen", "Alken"],
+        "answer": "Metan"
+    },
+    {
+        "question": "HNO3 bileşiği nedir?",
+        "options": ["Nitrik asit", "Nitröz asit", "Azot asidi", "Azot dioksit"],
+        "answer": "Nitrik asit"
+    },
+    {
+        "question": "NaOH bileşiği nedir?",
+        "options": ["Sodyum hidroksit", "Sodyum klorür", "Sodyum karbonat", "Sodyum nitrat"],
+        "answer": "Sodyum hidroksit"
+    },
+    {
+        "question": "CH3COOH bileşiği nedir?",
+        "options": ["Asetik asit", "Aseton", "Metanol", "Butanol"],
+        "answer": "Asetik asit"
+    },
+    {
+        "question": "Na2O bileşiği nedir?",
+        "options": ["Sodyum oksit", "Sodyum sülfat", "Sodyum nitrat", "Sodyum klorür"],
+        "answer": "Sodyum oksit"
+    },
+    {
+        "question": "N2 bileşiği nedir?",
+        "options": ["Azot gazı", "Amonyak", "Nitrojen oksit", "Asetilen"],
+        "answer": "Azot gazı"
+    },
+    {
+        "question": "CO2 bileşiği nedir?",
+        "options": ["Karbon dioksit", "Karbon monoksit", "Metan", "Asetilen"],
+        "answer": "Karbon dioksit"
+    },
+    {
+        "question": "C4H10 bileşiği nedir?",
+        "options": ["Butan", "Metan", "Etilen", "Asetilen"],
+        "answer": "Butan"
+    },
+    {
+        "question": "FeSO4 bileşiği nedir?",
+        "options": ["Demir(II) sülfat", "Demir(III) sülfat", "Demir(III) oksit", "Demir oksit"],
+        "answer": "Demir(II) sülfat"
+    },
+    {
+        "question": "Na2SO3 bileşiği nedir?",
+        "options": ["Sodyum sülfür", "Sodyum sülfat", "Sodyum karbonat", "Sodyum klorür"],
+        "answer": "Sodyum sülfür"
+    },
+    {
+        "question": "C6H5OH bileşiği nedir?",
+        "options": ["Fenol", "Benzin", "Aseton", "Etil alkol"],
+        "answer": "Fenol"
+    },
+    {
+        "question": "CuCl2 bileşiği nedir?",
+        "options": ["Bakır(II) klorür", "Bakır(I) klorür", "Bakır sülfat", "Bakır oksit"],
+        "answer": "Bakır(II) klorür"
+    },
+    {
+        "question": "C8H18 bileşiği nedir?",
+        "options": ["Oktan", "Metan", "Asetilen", "Etilen"],
+        "answer": "Oktan"
+    },
+    {
+        "question": "H2CO3 bileşiği nedir?",
+        "options": ["Karbonik asit", "Karbon dioksit", "Sülfürik asit", "Sodyum karbonat"],
+        "answer": "Karbonik asit"
+    },
+    {
+    "question": "H2SO3 bileşiği nedir?",
+        "options": ["Sülfürik asit", "Sülfür dioksit", "Sülfürik oksit", "Sülfür asidi"],
+        "answer": "Sülfürik asit"
+    },
+    {
+        "question": "C2H2 bileşiği nedir?",
+        "options": ["Asetilen", "Etilen", "Metan", "Propan"],
+        "answer": "Asetilen"
+    },
+    {
+        "question": "K2SO4 bileşiği nedir?",
+        "options": ["Potasyum sülfat", "Potasyum karbonat", "Potasyum klorür", "Potasyum nitrat"],
+        "answer": "Potasyum sülfat"
+    },
+    {
+        "question": "CaCO3 bileşiği nedir?",
+        "options": ["Kalsiyum karbonat", "Kalsiyum klorür", "Kalsiyum oksit", "Kalsiyum sülfat"],
+        "answer": "Kalsiyum karbonat"
+    },
+    {
+        "question": "HNO3 bileşiği nedir?",
+        "options": ["Nitrik asit", "Nitrojen oksit", "Nitröz asit", "Azot dioksit"],
+        "answer": "Nitrik asit"
+    },
+    {
+        "question": "CuSO4 bileşiği nedir?",
+        "options": ["Bakır(II) sülfat", "Bakır(I) sülfat", "Bakır klorür", "Bakır oksit"],
+        "answer": "Bakır(II) sülfat"
+    },
+    {
+        "question": "C6H6 bileşiği nedir?",
+        "options": ["Benzen", "Toluol", "Metanol", "Etilen"],
+        "answer": "Benzen"
+    },
+    {
+        "question": "MgSO4 bileşiği nedir?",
+        "options": ["Magnezyum sülfat", "Magnezyum klorür", "Magnezyum oksit", "Magnezyum karbonat"],
+        "answer": "Magnezyum sülfat"
+    },
+    {
+        "question": "NaNO3 bileşiği nedir?",
+        "options": ["Sodyum nitrat", "Sodyum sülfat", "Sodyum karbonat", "Sodyum klorür"],
+        "answer": "Sodyum nitrat"
+    },
+    {
+        "question": "P4O10 bileşiği nedir?",
+        "options": ["Fosfor pentoksit", "Fosfor dioksit", "Fosfor trioksit", "Fosfor oksit"],
+        "answer": "Fosfor pentoksit"
+    },
+    {
+        "question": "Cl2O7 bileşiği nedir?",
+        "options": ["Klor heptoksit", "Klor oksit", "Klor dioksit", "Klor sülfat"],
+        "answer": "Klor heptoksit"
+    },
+    {
+        "question": "H2O2 bileşiği nedir?",
+        "options": ["Aşırı su", "Oksijenli su", "Hidrojen dioksit", "Su"],
+        "answer": "Oksijenli su"
+    },
+    {
+        "question": "NaClO bileşiği nedir?",
+        "options": ["Sodyum hipoklorit", "Sodyum klorür", "Sodyum klorat", "Sodyum oksit"],
+        "answer": "Sodyum hipoklorit"
+    },
+    {
+        "question": "BaCl2 bileşiği nedir?",
+        "options": ["Baryum klorür", "Baryum oksit", "Baryum sülfat", "Baryum nitrat"],
+        "answer": "Baryum klorür"
+    },
+    {
+        "question": "C3H8 bileşiği nedir?",
+        "options": ["Propan", "Metan", "Asetilen", "Etilen"],
+        "answer": "Propan"
+    },
+    {
+        "question": "CaSO4 bileşiği nedir?",
+        "options": ["Kalsiyum sülfat", "Kalsiyum karbonat", "Kalsiyum klorür", "Kalsiyum oksit"],
+        "answer": "Kalsiyum sülfat"
+    },
+    {
+        "question": "CH3COOCH3 bileşiği nedir?",
+        "options": ["Asetat ester", "Asetik asit", "Metanol", "Aseton"],
+        "answer": "Asetat ester"
+    },
+    {
+        "question": "FeCl2 bileşiği nedir?",
+        "options": ["Demir(II) klorür", "Demir(III) klorür", "Demir sülfat", "Demir oksit"],
+        "answer": "Demir(II) klorür"
+    },
+    {
+        "question": "H2S bileşiği nedir?",
+        "options": ["Hidrojen sülfür", "Hidrojen klorür", "Hidrojen oksit", "Sülfürik asit"],
+        "answer": "Hidrojen sülfür"
+    },
+    {
+        "question": "C2H4 bileşiği nedir?",
+        "options": ["Etilen", "Metan", "Asetilen", "Propan"],
+        "answer": "Etilen"
+    },
+    {
+        "question": "KNO2 bileşiği nedir?",
+        "options": ["Potasyum nitrit", "Potasyum sülfat", "Potasyum karbonat", "Potasyum klorür"],
+        "answer": "Potasyum nitrit"
+    },
+    {
+        "question": "SiCl4 bileşiği nedir?",
+        "options": ["Silisyum tetklorür", "Silisyum dioksit", "Silikon klorür", "Silis klorür"],
+        "answer": "Silisyum tetklorür"
+    },
+    {
+        "question": "MnO2 bileşiği nedir?",
+        "options": ["Mangan oksit", "Mangan sülfat", "Mangan klorür", "Mangan nitrat"],
+        "answer": "Mangan oksit"
+    },
+    {
+        "question": "NaHCO3 bileşiği nedir?",
+        "options": ["Sodyum bikarbonat", "Sodyum karbonat", "Sodyum nitrat", "Sodyum klorür"],
+        "answer": "Sodyum bikarbonat"
+    },
+    {
+        "question": "C5H10O bileşiği nedir?",
+        "options": ["Pentanol", "Butanol", "Etanol", "Aseton"],
+        "answer": "Pentanol"
+    },
+    {
+        "question": "LiOH bileşiği nedir?",
+        "options": ["Lityum hidroksit", "Lityum oksit", "Lityum sülfat", "Lityum nitrat"],
+        "answer": "Lityum hidroksit"
+    },
+    {
+        "question": "N2H4 bileşiği nedir?",
+        "options": ["Hidrazin", "Amonyak", "Amin", "Nitröz asit"],
+        "answer": "Hidrazin"
+    },
+    {
+        "question": "K2O bileşiği nedir?",
+        "options": ["Potasyum oksit", "Potasyum sülfat", "Potasyum nitrat", "Potasyum karbonat"],
+        "answer": "Potasyum oksit"
+    },
+    {
+        "question": "C2H6 bileşiği nedir?",
+        "options": ["Etilen", "Metan", "Asetilen", "Etil alkol"],
+        "answer": "Etilen"
+    },
+    {
+        "question": "BaO bileşiği nedir?",
+        "options": ["Baryum oksit", "Baryum klorür", "Baryum nitrat", "Baryum sülfat"],
+        "answer": "Baryum oksit"
+    },
+    {
+        "question": "NH4Cl bileşiği nedir?",
+        "options": ["Amonyum klorür", "Amonyak", "Amonyum nitrat", "Amonyum sülfat"],
+        "answer": "Amonyum klorür"
+    },
+    {
+        "question": "C7H8 bileşiği nedir?",
+        "options": ["Toluol", "Benzen", "Metanol", "Etilen"],
+        "answer": "Toluol"
+    },
+    {
+        "question": "C3H6O bileşiği nedir?",
+        "options": ["Aseton", "Asetat ester", "Metanol", "Propanol"],
+        "answer": "Aseton"
+    },
+    {
+        "question": "H3PO4 bileşiği nedir?",
+        "options": ["Fosforik asit", "Fosfor pentoksit", "Fosfor dioksit", "Fosfor oksit"],
+        "answer": "Fosforik asit"
+    }
+        ];
+
+        // Soruları karıştıran fonksiyon
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // Shuffle the questions at the start
+        shuffleArray(questions);
+
+        function loadQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+            document.getElementById('question').innerText = currentQuestion.question;
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = '';
+            currentQuestion.options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.onclick = () => checkAnswer(option, button);
+                optionsDiv.appendChild(button);
+            });
+            document.getElementById('next').style.display = 'none'; // Sonra butonunu gizle
+        }
+
+        function checkAnswer(selected, button) {
+            const currentQuestion = questions[currentQuestionIndex];
+            if (selected === currentQuestion.answer) {
+                score++;
+                button.classList.add('correct');
+                document.getElementById('score').innerText = `Puan: ${score}`;
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    document.getElementById('next').style.display = 'block'; // Sonra butonunu göster
+                } else {
+ document.getElementById('question').innerText = "Oyun bitti, puanınız: " + score;
+                    document.getElementById('options').innerHTML = '';
+                    document.getElementById('next').style.display = 'none'; // Sonra butonunu gizle
+                }
+            } else {
+                button.classList.add('incorrect');
+                document.getElementById('question').innerText = "Oyun bitti, puanınız: " + score;
+                document.getElementById('options').innerHTML = '';
+                document.getElementById('next').style.display = 'none'; // Sonra butonunu gizle
+                const buttons = document.querySelectorAll('#options button');
+                buttons.forEach(btn => btn.disabled = true); // Tüm butonları etkisizleştir
+            }
+        }
+
+        document.getElementById('next').onclick = function() {
+            loadQuestion();
+        };
+
+        // Oyunu başlat
+        loadQuestion();
+    </script>
+</body>
+</html>
