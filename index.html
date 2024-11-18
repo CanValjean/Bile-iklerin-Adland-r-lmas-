@@ -51,11 +51,16 @@
             display: none;
             margin-top: 20px;
         }
+        #author {
+            font-size: 16px;
+            margin-top: 100px;
+            margin-left: 600px;
+        }
         .correct {
-            background-color: #2196F3; /* Doğru için mavi */
+            background-color: #2196F3; /* Blue for correct */
         }
         .incorrect {
-            background-color: #FF5722; /* Yanlış için kırmızı */
+            background-color: #FF5722; /* Red for incorrect */
         }
     </style>
 </head>
@@ -65,6 +70,7 @@
     <div id="options"></div>
     <div id="score"></div>
     <button id="next">Sonraki Soru</button>
+    <div id="author">Can Kaderli</div>
 
     <script>
         const questions = [
@@ -486,7 +492,7 @@
         let currentQuestionIndex = 0;
         let score = 0;
 
-        // Shuffle the questions at the start
+        // Soruları karıştır
         shuffleArray(questions);
 
         function loadQuestion() {
@@ -512,14 +518,14 @@
                 currentQuestionIndex++;
                 if (currentQuestionIndex < questions.length) {
                     document.getElementById('next').style.display = 'block'; // Sonra butonunu göster
-                } else {
- document.getElementById('question').innerText = "Oyun bitti, puanınız: " + score;
+ } else {
+                    document.getElementById('question').innerText = "Oyun bitti, puanınız " + score;
                     document.getElementById('options').innerHTML = '';
                     document.getElementById('next').style.display = 'none'; // Sonra butonunu gizle
                 }
             } else {
                 button.classList.add('incorrect');
-                document.getElementById('question').innerText = "Oyun bitti, puanınız: " + score;
+                document.getElementById('question').innerText = "Oyun bitti, doğru cevap: " + currentQuestion.answer + ". Puanınız: " + score;
                 document.getElementById('options').innerHTML = '';
                 document.getElementById('next').style.display = 'none'; // Sonra butonunu gizle
                 const buttons = document.querySelectorAll('#options button');
